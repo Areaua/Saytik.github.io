@@ -1,25 +1,34 @@
 const express = require('express');
-const fs = require('fs');
+const bodyParser = require('body-parser');
 const app = express();
-const port = 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+let logs = [];
 
 app.post('/log', (req, res) => {
+    console.log("Received POST request to /log");
     const payeerNumber = req.body.payeerNumber;
-    fs.appendFile('log.txt', `${payeerNumber}\n`, (err) => {
-        if (err) {
-            console.error('Error writing to file', err);
-            res.status(500).send('Internal Server Error');
-        } else {
-            res.send('Data saved to log.txt');
-        }
-    });
+    console.log("Payeer number: ", payeerNumber);
+    if (payeerNumber) {
+        logs.push(payeerNumber);
+        console.log("Payeer number logged successfully");
+        res.send('Номер PAYEER успешно записан');
+    } else {
+        console.log("Payeer number not provided");
+        res.status(400).send('PAYEER номер не указан');
+    }
+});
+
+app.get('/logs', (req, res) => {
+    res.json(logs);
 });
 
 app.use(express.static('public'));
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+app.listen(3000, () => {
+    console.log('Server started on port 3000');
 });
+
+module.exports = app;

@@ -19,29 +19,17 @@
             font-size: 24px;
             margin-top: 20px;
         }
-        #submitButton {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-        #submitButton.enabled {
-            cursor: pointer;
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
     <h1>ОТПРАВЛЯЙ НАМ КАЖДЫЕ 5 МИНУТ НОМЕР СВОЕГО PAYEER И ПОЛУЧАЙ ПО 1₽</h1>
     <input type="text" id="payeerInput" placeholder="Введите номер PAYEER кошелька">
-    <button id="submitButton" disabled>Отправить</button>
+    <button onclick="sendPayeerNumber()">Отправить</button>
     <div id="timer">05:00</div>
 
     <script>
         let timerInterval;
-        let timeRemaining = 60*5; // 5 минут в секундах
-        const submitButton = document.getElementById('submitButton');
+        let timeRemaining = 60 * 5; // 5 минут в секундах
 
         function startTimer() {
             const display = document.querySelector('#timer');
@@ -56,8 +44,6 @@
 
                 if (--timeRemaining < 0) {
                     clearInterval(timerInterval);
-                    submitButton.disabled = false;
-                    submitButton.classList.add('enabled');
                     timeRemaining = 0;
                 }
             }, 1000);
@@ -65,6 +51,20 @@
 
         function stopTimer() {
             clearInterval(timerInterval);
+        }
+
+        function sendPayeerNumber() {
+            const payeerNumber = document.getElementById('payeerInput').value;
+            fetch('/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payeerNumber: payeerNumber })
+            })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Ошибка:', error));
         }
 
         document.addEventListener('visibilitychange', () => {
@@ -76,28 +76,6 @@
         });
 
         window.onload = startTimer;
-
-        submitButton.addEventListener('click', () => {
-            const payeerNumber = document.getElementById('payeerInput').value;
-            fetch('/log', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ payeerNumber: payeerNumber }),
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-                submitButton.disabled = true;
-                submitButton.classList.remove('enabled');
-                timeRemaining = 60 * 5; // Сброс таймера на 5 минут
-                startTimer();
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        });
     </script>
 </body>
 </html>
