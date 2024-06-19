@@ -24,7 +24,7 @@
 <body>
     <h1>ОТПРАВЛЯЙ НАМ КАЖДЫЕ 5 МИНУТ НОМЕР СВОЕГО PAYEER И ПОЛУЧАЙ ПО 1₽</h1>
     <input type="text" id="payeerInput" placeholder="Введите номер PAYEER кошелька">
-    <button onclick="sendPayeerNumber()">Отправить</button>
+    <button id="sendButton" disabled>Отправить</button> <!-- Добавлен id и disabled -->
     <div id="timer">05:00</div>
 
     <script>
@@ -33,6 +33,7 @@
 
         function startTimer() {
             const display = document.querySelector('#timer');
+            const sendButton = document.querySelector('#sendButton'); // Выбираем кнопку по id
             timerInterval = setInterval(() => {
                 let minutes = parseInt(timeRemaining / 60, 10);
                 let seconds = parseInt(timeRemaining % 60, 10);
@@ -45,6 +46,7 @@
                 if (--timeRemaining < 0) {
                     clearInterval(timerInterval);
                     timeRemaining = 0;
+                    sendButton.disabled = false; // Делаем кнопку активной
                 }
             }, 1000);
         }
@@ -63,7 +65,13 @@
                 body: JSON.stringify({ payeerNumber: payeerNumber })
             })
             .then(response => response.text())
-            .then(data => alert(data))
+            .then(data => {
+                alert(data);
+                document.getElementById('payeerInput').value = ''; // Очищаем поле ввода
+                document.getElementById('sendButton').disabled = true; // Делаем кнопку снова неактивной
+                timeRemaining = 60 * 5; // Сбрасываем таймер
+                startTimer(); // Запускаем таймер заново
+            })
             .catch(error => console.error('Ошибка:', error));
         }
 
