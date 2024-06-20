@@ -24,6 +24,11 @@
             justify-content: center;
             margin-top: 20px;
         }
+        .banner-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -35,7 +40,20 @@
     <input type="text" id="payeerInput" placeholder="Введите номер PAYEER кошелька">
     <button onclick="sendPayeerNumber()">Отправить</button>
     <div id="timer">05:00</div>
-    <script src="//super-traf.ru/earn/partner/get?id=26100&type=5&code=1718862503" type="text/javascript"></script>
+    
+    <!-- Два скрипта рядом друг с другом -->
+    <div class="banner-row">
+        <div class="banner-item">
+            <script src="//super-traf.ru/earn/partner/get?id=26100&type=5&code=1718862503" type="text/javascript"></script>
+        </div>
+        <div class="banner-item">
+            <script src="//super-traf.ru/earn/partner/get?id=26100&type=5&code=1718862471" type="text/javascript"></script>"> 
+        </div>    
+        <div class="banner-item">
+            <script src="//super-traf.ru/earn/partner/get?id=26100&type=5&code=1718862493" type="text/javascript"></script>
+        </div>
+    </div>
+
     <div class="banner-container">
         <!-- Средний рекламный скрипт -->
         <script src="//super-traf.ru/earn/partner/get?id=26100&type=1&code=1718862390" type="text/javascript"></script>
@@ -44,8 +62,6 @@
     <!-- Нижний рекламный скрипт -->
     <div class="advear_partner_3"></div>
     <script src="//super-traf.ru/earn/partner/get?id=26100&type=3&code=1718862349" type="text/javascript"></script>
-
-    
 
     <script>
         let timerInterval;
